@@ -1,14 +1,20 @@
-#pragma once
+#include "Player.h"
+#include "Bullet.h"
+#include "Asteroid.h"
 #include "Scene.h"
 
 class GameplayScene : public Scene {
-public:
-	GameplayScene()
-		: Scene() {
-	}
+private:
+    Player* player;
+    std::vector<Bullet*> bullets;
+    std::vector<Asteroid*> asteroids;
+    int wave = 1;
+    SDL_Renderer* renderer = nullptr;
 
-	void Start(SDL_Renderer* rend) override;
-	void Update(float dt) override;
-	void Render(SDL_Renderer* rend) override;
-	void Exit()override;
+public:
+    void Start(SDL_Renderer* rend) override;
+    void Update(float dt) override;
+    void Render(SDL_Renderer* rend) override;
+    void Exit() override;
+    void SpawnAsteroids(int count);
 };

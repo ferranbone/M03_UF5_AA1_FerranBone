@@ -10,52 +10,65 @@ GameEngine::GameEngine(int windowWidth, int windowHeight) {
 void GameEngine::Update() {
 	bool quitGame = false;
 
-	GameObject object(renderer);
-
-	//INT TIME
-	float dt = 0.0f;
-	float lastTime = (float)SDL_GetPerformanceCounter() /(float)SDL_GetPerformanceFrequency();
-
-	const int FPS = 60;
-	const float frameTime = 1.0f/(float)FPS;
-
-	//SCENES
+	// Escenas
 	std::map<std::string, Scene*> gameScene;
-
 	gameScene["MainMenu"] = new MenuScene();
 	gameScene["Gameplay"] = new GameplayScene();
 	gameScene["HightScores"] = new HighscoresScene();
 
-	Scene* currentScene = gameScene["Gameplay"];
+	Scene* currentScene = gameScene["MainMenu"];
 	currentScene->Start(renderer);
 
+	// Time control
+	float dt = 0.0f;
+	float lastTime = (float)SDL_GetPerformanceCounter() / (float)SDL_GetPerformanceFrequency();
+	const int FPS = 60;
+	const float frameTime = 1.0f / (float)FPS;
+
 	while (!quitGame) {
-		//DETLTA TIME CONTROL
+		// Delta time
 		float currentTime = (float)SDL_GetPerformanceCounter() / (float)SDL_GetPerformanceFrequency();
 		dt += currentTime - lastTime;
+		lastTime = currentTime;
 
 		if (dt > frameTime) {
-			//INPUTS
+			// Eventos
 			SDL_Event e;
-
 			while (SDL_PollEvent(&e) != 0) {
 				if (e.type == SDL_QUIT) {
 					quitGame = true;
 				}
+				if (e.type == SDL_KEYDOWN) {
+					switch (e.key.keysym.sym) {
+					case SDLK_m:
+						currentScene->Exit();
+						currentScene = gameScene["MainMenu"];
+						currentScene->Start(renderer);
+						break;
+					case SDLK_h:
+						currentScene->Exit();
+						currentScene = gameScene["HightScores"];
+						currentScene->Start(renderer);
+						break;
+					case SDLK_g:
+						currentScene->Exit();
+						currentScene = gameScene["Gameplay"];
+						currentScene->Start(renderer);
+						break;
+					}
+				}
 			}
 
-			//LOGIC
+			// Lógica
 			currentScene->Update(dt);
 
-			//RENDER
-			SDL_SetRenderDrawColor(renderer, 255, 120, 0, 1); //Que queremos que pinte
-
-			SDL_RenderClear(renderer);						  //Limpia lo anterior
+			// Render
+			SDL_SetRenderDrawColor(renderer, 255, 120, 0, 255);  // RGBA
+			SDL_RenderClear(renderer);
 			currentScene->Render(renderer);
-			SDL_RenderPresent(renderer);					  //Pintamos lo nuevo
+			SDL_RenderPresent(renderer);
 
-
-			//SCENES TRANSITION
+			// Transición de escenas si terminó
 			if (currentScene->IsFinished()) {
 				currentScene->Exit();
 				currentScene = gameScene[currentScene->GetTargetScene()];
@@ -66,6 +79,7 @@ void GameEngine::Update() {
 		}
 	}
 }
+
 
 void GameEngine::Finish() {
 	SDL_DestroyWindow(window);

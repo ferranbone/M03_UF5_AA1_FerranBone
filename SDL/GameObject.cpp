@@ -21,15 +21,18 @@ GameObject::GameObject(SDL_Renderer* renderer) {
 }
 
 void GameObject::Update(float dt) {
-	zRotation = 10 * dt;
+	zRotation += 90 * dt;
 }
 
 void GameObject::Render(SDL_Renderer* renderer) {
-	SDL_Rect source{ 0,0,		// TEXTURE POSITION
-					30,40 };	//TEXTURE SIZE
-	
-	SDL_Rect destination{ position.x,position.y,		//WINDOW POSITION
-				source.w*scale.x,source.h *scale.y };	//WINDOW SIZE
+	SDL_Rect source{ 0, 0, 30, 40 };
 
-	SDL_RenderCopy(renderer, texture, &source, &destination);
+	SDL_Rect destination{
+		static_cast<int>(position.x),
+		static_cast<int>(position.y),
+		static_cast<int>(source.w * scale.x),
+		static_cast<int>(source.h * scale.y)
+	};
+
+	SDL_RenderCopyEx(renderer, texture, &source, &destination, zRotation, nullptr, SDL_FLIP_NONE);
 }
