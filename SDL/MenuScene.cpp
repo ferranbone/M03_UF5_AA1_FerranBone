@@ -3,6 +3,7 @@
 #include <iostream>
 
 void MenuScene::Start(SDL_Renderer* renderer) {
+
     if (TTF_WasInit() == 0) {
         if (TTF_Init() == -1) {
             std::cout << "Error inicializando SDL_ttf: " << TTF_GetError() << "\n";
@@ -17,10 +18,12 @@ void MenuScene::Start(SDL_Renderer* renderer) {
     }
 
     SDL_Color normalColor = { 255, 255, 255, 255 }; // blanco
-    SDL_Color hoverColor = { 255, 0, 0, 255 };      // rojo
+    SDL_Color hoverColor = { 0, 0, 0, 0 };      // rojo
 
-    buttons.push_back(new Button(renderer, font, "Play", { 300, 200, 200, 50 }, normalColor, hoverColor, []() {
-        std::cout << "Play clicked\n";
+    buttons.push_back(new Button(renderer, font, "Play", { 300, 200, 200, 50 }, normalColor, hoverColor, [this]() {
+        if (changeSceneFunc) {
+            changeSceneFunc("Gameplay");  // Cambia a la escena Gameplay
+        }
         }));
 
     buttons.push_back(new Button(renderer, font, "Exit", { 300, 300, 200, 50 }, normalColor, hoverColor, []() {
@@ -30,18 +33,21 @@ void MenuScene::Start(SDL_Renderer* renderer) {
         }));
 }
 
-void Button::HandleEvent(SDL_Event& e) {
-    int mouseX, mouseY;
-    SDL_GetMouseState(&mouseX, &mouseY);
-
-    SDL_Point mousePos = { mouseX, mouseY };
-    isHovered = SDL_PointInRect(&mousePos, &rect);
-
-    if (isHovered && e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
-        onClick();
+void MenuScene::Update(float dt) {
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        for (auto button : buttons) {
+            button->HandleEvent(e);
+        }
+        if (e.type == SDL_QUIT) {
+            // Si quieres, maneja quit aquí o en otro lugar
+        }
     }
 }
 
+void MenuScene::SetChangeSceneFunction(std::function<void(const std::string&)> func) {
+    changeSceneFunc = func;
+}
 
 void MenuScene::Render(SDL_Renderer* renderer) {
     for (auto& b : buttons) {

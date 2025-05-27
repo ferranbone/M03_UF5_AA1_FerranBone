@@ -5,16 +5,32 @@ GameEngine::GameEngine(int windowWidth, int windowHeight) {
     InitSDL();
     InitWindowAndRenderer(windowWidth, windowHeight);
 
-    // Mover el mapa aquí para que no se destruya
+    // Crear escenas
     gameScene["MainMenu"] = new MenuScene();
     gameScene["Gameplay"] = new GameplayScene();
     gameScene["HighScores"] = new HighscoresScene();
 
+    // Pasar la función para cambiar escena al MenuScene
+    MenuScene* menu = static_cast<MenuScene*>(gameScene["MainMenu"]);
+    if (menu) {
+        menu->SetChangeSceneFunction([this](const std::string& sceneName) {
+            if (currentScene) {
+                currentScene->Exit();
+            }
+            currentScene = gameScene[sceneName];
+            if (currentScene) {
+                currentScene->Start(renderer);
+            }
+            });
+    }
+
+    // Iniciar escena actual
     currentScene = gameScene["MainMenu"];
     if (currentScene) {
         currentScene->Start(renderer);
     }
 }
+
 
 void GameEngine::Update() {
     bool quitGame = false;

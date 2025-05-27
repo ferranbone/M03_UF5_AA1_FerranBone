@@ -28,7 +28,6 @@ void Player::Update(float dt) {
     position.x += velocity.x * dt;
     position.y += velocity.y * dt;
 
-    // Freno gradual para que no salga volando
     velocity.x *= 0.98f;
     velocity.y *= 0.98f;
 
