@@ -12,25 +12,58 @@ void GameEngine::Update() {
 
 	GameObject object(renderer);
 
+	//INT TIME
+	float dt = 0.0f;
+	float lastTime = (float)SDL_GetPerformanceCounter() /(float)SDL_GetPerformanceFrequency();
+
+	const int FPS = 60;
+	const float frameTime = 1.0f/(float)FPS;
+
+	//SCENES
+	std::map<std::string, Scene*> gameScene;
+
+	gameScene["MainMenu"] = new MenuScene();
+	gameScene["Gameplay"] = new GameplayScene();
+	gameScene["HightScores"] = new HighscoresScene();
+
+	Scene* currentScene = gameScene["Gameplay"];
+	currentScene->Start(renderer);
+
 	while (!quitGame) {
-		//INPUTS
-		SDL_Event e;
+		//DETLTA TIME CONTROL
+		float currentTime = (float)SDL_GetPerformanceCounter() / (float)SDL_GetPerformanceFrequency();
+		dt += currentTime - lastTime;
 
-		while (SDL_PollEvent(&e) != 0) {
-			if (e.type == SDL_QUIT) {
-				quitGame = true;
+		if (dt > frameTime) {
+			//INPUTS
+			SDL_Event e;
+
+			while (SDL_PollEvent(&e) != 0) {
+				if (e.type == SDL_QUIT) {
+					quitGame = true;
+				}
 			}
+
+			//LOGIC
+			currentScene->Update(dt);
+
+			//RENDER
+			SDL_SetRenderDrawColor(renderer, 255, 120, 0, 1); //Que queremos que pinte
+
+			SDL_RenderClear(renderer);						  //Limpia lo anterior
+			currentScene->Render(renderer);
+			SDL_RenderPresent(renderer);					  //Pintamos lo nuevo
+
+
+			//SCENES TRANSITION
+			if (currentScene->IsFinished()) {
+				currentScene->Exit();
+				currentScene = gameScene[currentScene->GetTargetScene()];
+				currentScene->Start(renderer);
+			}
+
+			dt -= frameTime;
 		}
-
-		//LOGIC
-		object.Update(0.f);
-
-		//RENDER
-		SDL_SetRenderDrawColor(renderer, 255, 120, 0, 1); //Que queremos que pinte
-
-		SDL_RenderClear(renderer);						  //Limpia lo anterior
-		object.Render(renderer);
-		SDL_RenderPresent(renderer);					  //Pintamos lo nuevo
 	}
 }
 

@@ -21,13 +21,21 @@
   <ItemGroup>
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameplayScene.h" />
+    <ClInclude Include="HighscoresScene.h" />
+    <ClInclude Include="MenuScene.h" />
+    <ClInclude Include="Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameplayScene.cpp" />
+    <ClCompile Include="HighscoresScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\asteroids_spritesheet.png" />
     <Image Include="resources\logo.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
