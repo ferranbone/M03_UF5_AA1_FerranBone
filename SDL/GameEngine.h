@@ -10,15 +10,17 @@
 
 class GameEngine {
 public:
-	SDL_Window* window;
-	SDL_Renderer* renderer;
+    GameEngine(int windowWidth, int windowHeight);
+    void Update();
+    void Finish();
 
-	GameEngine(int windowWidth, int windowHeight);
+private:
+    void InitSDL();
+    void InitWindowAndRenderer(int windowWidth, int windowHeight);
 
-	void Update();
-	void Finish();
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
 
-	void InitSDL();
-	void InitWindowAndRenderer(int windowWidth, int windowHeight);
-
+    std::map<std::string, Scene*> gameScene;
+    Scene* currentScene = nullptr;
 };

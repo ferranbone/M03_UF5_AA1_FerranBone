@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Button.h"
 #include <vector>
+#include <SDL_ttf.h>
 
 class MenuScene : public Scene {
 public:
@@ -12,4 +13,5 @@ public:
 
 private:
     std::vector<Button*> buttons;
+    TTF_Font* font = nullptr;
 };
