@@ -32,9 +32,9 @@ void Player::Update(float dt) {
     velocity.y *= 0.98f;
 
     // Reaparición en pantalla (ajusta según tamaño ventana)
-    if (position.x < 0) position.x += 1920;
-    else if (position.x > 1920) position.x -= 1920;
+    if (position.x < 0) position.x += 600;
+    else if (position.x > 600) position.x -= 600;
 
-    if (position.y < 0) position.y += 1080;
-    else if (position.y > 1080) position.y -= 1080;
+    if (position.y < 0) position.y += 600;
+    else if (position.y > 600) position.y -= 600;
 }

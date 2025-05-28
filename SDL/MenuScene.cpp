@@ -20,8 +20,8 @@ void MenuScene::Start(SDL_Renderer* renderer) {
     SDL_Color normalColor = { 255, 255, 255, 255 }; // blanco
     SDL_Color hoverColor = { 0, 0, 0, 0 };      // rojo
 
-    int centerX = 1920 / 2 - 100;
-    int centerY = 1080 / 2 - 25;
+    int centerX = 600 / 2 - 100;
+    int centerY = 600 / 2 - 25;
 
     buttons.push_back(new Button(renderer, font, "Play", { centerX, centerY - 50, 200, 50 }, normalColor, hoverColor, [this]() {
         std::cout << "Botón Play clickeado!" << std::endl;  // <-- Aquí la comprobación

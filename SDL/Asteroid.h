@@ -12,4 +12,6 @@ public:
     Asteroid(SDL_Renderer* renderer, Vector2 pos, AsteroidSize size);
 
     void Update(float dt) override;
+
+    void OnDestroyed(std::vector<Asteroid*>& asteroidList);
 };

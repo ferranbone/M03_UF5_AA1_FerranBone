@@ -13,8 +13,8 @@ void Bullet::Update(float dt) {
     lifetime -= dt;
 
     // Wrap around
-    if (position.x < 0) position.x = 1920;
-    if (position.x > 1920) position.x = 0;
-    if (position.y < 0) position.y = 1080;
-    if (position.y > 1080) position.y = 0;
+    if (position.x < 0) position.x = 600;
+    if (position.x > 600) position.x = 0;
+    if (position.y < 0) position.y = 600;
+    if (position.y > 600) position.y = 0;
 }
