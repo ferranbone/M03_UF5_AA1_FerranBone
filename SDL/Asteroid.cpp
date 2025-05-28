@@ -30,7 +30,6 @@ Asteroid::Asteroid(SDL_Renderer* renderer, Vector2 pos, Vector2 parentVel, Aster
     case SMALL:  scale = Vector2(0.3f, 0.3f); break;
     }
 
-    // Hereda velocidad del padre con variación random
     float variation = 0.5f + (rand() % 100) / 100.0f; // 0.5 - 1.5
     velocity = Vector2(
         parentVel.x * variation,
@@ -39,12 +38,12 @@ Asteroid::Asteroid(SDL_Renderer* renderer, Vector2 pos, Vector2 parentVel, Aster
 }
 
 Vector2 Asteroid::GetRandomOffscreenPosition() {
-    int edge = rand() % 4; // 0: arriba, 1: derecha, 2: abajo, 3: izquierda
+    int edge = rand() % 4;
     switch (edge) {
-    case 0: return Vector2(rand() % 600, -100); // Arriba
-    case 1: return Vector2(700, rand() % 600); // Derecha
-    case 2: return Vector2(rand() % 600, 700); // Abajo
-    case 3: return Vector2(-100, rand() % 600); // Izquierda
+    case 0: return Vector2(rand() % 600, -100);
+    case 1: return Vector2(700, rand() % 600);
+    case 2: return Vector2(rand() % 600, 700);
+    case 3: return Vector2(-100, rand() % 600);
     default: return Vector2(rand() % 600, -100);
     }
 }
@@ -62,11 +61,9 @@ void Asteroid::Render(SDL_Renderer* rend) {
     if (!texture) return;
 
 
-    // Calcula dimensiones escaladas
     int scaledWidth = static_cast<int>(size.x * scale.x);
     int scaledHeight = static_cast<int>(size.y * scale.y);
 
-    // Crea el rectángulo de destino
     SDL_Rect destRect = {
         static_cast<int>(position.x - scaledWidth / 2),
         static_cast<int>(position.y - scaledHeight / 2),
@@ -80,6 +77,5 @@ void Asteroid::Render(SDL_Renderer* rend) {
         size.x,
         size.y
     };
-    // Renderiza con la textura y coordenadas de sprite heredadas
     SDL_RenderCopyEx(rend, texture, &srcRect, &destRect, zRotation, nullptr, SDL_FLIP_NONE);
 }

@@ -3,7 +3,7 @@
 #include <cmath>
 
 Enemy::Enemy(SDL_Renderer* renderer, Vector2 position) :
-    GameObject(renderer, /* spriteRect */) {
+    GameObject(renderer, new Vector2int(195, 97), new Vector2int(60, 40)) {
     this->position = position;
     ChangeDirection();
 }

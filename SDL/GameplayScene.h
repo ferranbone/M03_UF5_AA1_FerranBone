@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "Asteroid.h"
+#include "Enemy.h"
 #include "Scene.h"
 
 class GameplayScene : public Scene {
@@ -15,6 +16,7 @@ private:
     std::vector<Enemy*> enemies;
     float enemySpawnTimer = 0.0f;
     const float ENEMY_SPAWN_TIME = 15.0f;
+    bool CheckCollision(GameObject* a, GameObject* b);
 
 public:
     void Start(SDL_Renderer* rend) override;

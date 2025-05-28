@@ -7,7 +7,7 @@
 Player::Player(SDL_Renderer* renderer)
     : GameObject(renderer, new Vector2int(0, 0), new Vector2int(30, 40)), velocity(0, 0), speed(100.0f), rotationSpeed(180.0f)
 {
-    position = Vector2(1920/2, 1080/2);  // posición inicial, cambia si quieres
+    position = Vector2(1920/2, 1080/2);
     scale = Vector2(1, 1);
     zRotation = 0.0f;
 }
@@ -51,7 +51,6 @@ void Player::Update(float dt) {
     velocity.x *= 0.98f;
     velocity.y *= 0.98f;
 
-    // Reaparición en pantalla (ajusta según tamaño ventana)
     if (position.x < 0) position.x += 600;
     else if (position.x > 600) position.x -= 600;
 

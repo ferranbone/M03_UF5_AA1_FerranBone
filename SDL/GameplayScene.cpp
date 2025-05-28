@@ -24,9 +24,9 @@ void GameplayScene::Update(float dt) {
     player->Update(dt);
 
     if (player->isDead && player->lives <= 0 && player->deathTimer <= 0) {
-        targetScene = "MenuScene";  // Nombre de tu escena de menú
+        targetScene = "MenuScene";
         isFinished = true;
-        return;  // Salir temprano para evitar actualizaciones adicionales
+        return;
     }
 
     // Colisiones
@@ -82,13 +82,101 @@ void GameplayScene::Update(float dt) {
     // Eliminar balas viejas
     bullets.erase(std::remove_if(bullets.begin(), bullets.end(), [](Bullet* b) {
         return b->lifetime <= 0;
-    }), bullets.end());
+        }), bullets.end());
 
     // Nueva oleada
     if (asteroids.empty()) {
         ++wave;
         SpawnAsteroids(wave);
     }
+    // Spawn de enemigos
+    enemySpawnTimer += dt;
+    if (enemySpawnTimer >= ENEMY_SPAWN_TIME) {
+        SpawnEnemy();
+        enemySpawnTimer = 0.0f;
+    }
+
+    // Actualizar enemigos
+    for (auto e : enemies) {
+        e->Update(dt);
+    }
+
+    // Colisión enemigo-asteroide
+    for (auto e = enemies.begin(); e != enemies.end(); ) {
+        bool enemyDestroyed = false;
+
+        for (auto a = asteroids.begin(); a != asteroids.end(); ) {
+            if (CheckCollision(*e, *a)) {
+                // Romper asteroide
+                if ((*a)->asteroidSize == LARGE) {
+                    asteroids.push_back(new Asteroid(renderer, (*a)->position, (*a)->velocity, MEDIUM));
+                    asteroids.push_back(new Asteroid(renderer, (*a)->position, (*a)->velocity, MEDIUM));
+                }
+                else if ((*a)->asteroidSize == MEDIUM) {
+                    asteroids.push_back(new Asteroid(renderer, (*a)->position, (*a)->velocity, SMALL));
+                    asteroids.push_back(new Asteroid(renderer, (*a)->position, (*a)->velocity, SMALL));
+                }
+
+                delete* a;
+                a = asteroids.erase(a);
+                enemyDestroyed = true;
+                break;
+            }
+            else {
+                ++a;
+            }
+        }
+
+        if (enemyDestroyed) {
+            delete* e;
+            e = enemies.erase(e);
+        }
+        else {
+            ++e;
+        }
+    }
+
+    // Colisión enemigo-jugador
+    for (auto e = enemies.begin(); e != enemies.end(); ) {
+        if (CheckCollision(*e, player) && !player->isDead) {
+            player->lives--;
+            player->isDead = true;
+            player->deathTimer = player->DEATH_ANIMATION_TIME;
+
+            delete* e;
+            e = enemies.erase(e);
+        }
+        else {
+            ++e;
+        }
+    }
+
+    // Colisión enemigo-bala
+    for (auto b = bullets.begin(); b != bullets.end(); ) {
+        bool bulletDestroyed = false;
+
+        for (auto e = enemies.begin(); e != enemies.end(); ) {
+            if (CheckCollision(*b, *e)) {
+                delete* e;
+                e = enemies.erase(e);
+                bulletDestroyed = true;
+                score += 150;
+                break;
+            }
+            else {
+                ++e;
+            }
+        }
+
+        if (bulletDestroyed) {
+            delete* b;
+            b = bullets.erase(b);
+        }
+        else {
+            ++b;
+        }
+    }
+
 }
 
 void GameplayScene::Render(SDL_Renderer* rend) {
@@ -96,6 +184,9 @@ void GameplayScene::Render(SDL_Renderer* rend) {
     for (auto a : asteroids) a->Render(rend);
     player->Render(rend);
     RenderHUD(rend);
+    for (auto e : enemies) {
+        e->Render(rend);
+    }
 }
 
 void GameplayScene::RenderHUD(SDL_Renderer* rend) {
@@ -133,4 +224,34 @@ void GameplayScene::Exit() {
     for (auto a : asteroids) delete a;
     bullets.clear();
     asteroids.clear();
+    for (auto e : enemies) {
+        delete e;
+    }
+    enemies.clear();
+}
+
+void GameplayScene::SpawnEnemy() {
+    Vector2 spawnPos;
+    int edge = rand() % 4;
+    switch (edge) {
+    case 0: spawnPos = Vector2(rand() % 600, -50); break;
+    case 1: spawnPos = Vector2(590, rand() % 600); break;
+    case 2: spawnPos = Vector2(rand() % 600, 700); break;
+    case 3: spawnPos = Vector2(-50, rand() % 600); break;
+    }
+
+    enemies.push_back(new Enemy(renderer, spawnPos));
+}
+
+bool GameplayScene::CheckCollision(GameObject* a, GameObject* b) {
+    if (!a || !b) return false;
+
+    float dx = a->position.x - b->position.x;
+    float dy = a->position.y - b->position.y;
+    float distanceSquared = dx * dx + dy * dy;
+
+    float collisionDistance = 25.0f;
+    float collisionDistanceSquared = collisionDistance * collisionDistance;
+
+    return distanceSquared < collisionDistanceSquared;
 }

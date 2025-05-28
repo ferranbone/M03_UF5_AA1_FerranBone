@@ -38,7 +38,7 @@ void GameObject::Render(SDL_Renderer* renderer) {
         size.y
     };
 
-    // Rectángulo destino en pantalla (aplicando escala)
+    // Rectángulo destino en pantalla
     int scaledWidth = static_cast<int>(size.x * scale.x);
     int scaledHeight = static_cast<int>(size.y * scale.y);
 

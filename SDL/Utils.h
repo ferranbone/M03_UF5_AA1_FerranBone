@@ -6,17 +6,11 @@ public:
     float x;
     float y;
 
-    //Vector2 uses float, convenient for positions directions and speed 
-    //Vector2int is used for sizes and grid positions (for example, taking the projectile asset from the .png)
-
-    //Constructors with default value of 0 to not start moving 
     Vector2() : x(0), y(0) {}
-    //Allows me to assign specific values
     Vector2(float _x, float _y) {
         x = _x;
         y = _y;
     }
-    //The following operators allow me to make mathematical equations with the Vector2
     Vector2 operator+(const Vector2& other) const {
         return Vector2(x + other.x, y + other.y);
     }
@@ -34,13 +28,11 @@ public:
         return Vector2(x / scalar, y / scalar);
     }
 
-    //Calculates the length of the vector2
     float Magnitude() const {
         return std::sqrt(x * x + y * y);
     }
 
     Vector2 Normalized() const {
-        //Allows us to only work with pure direction and mantain a consistent movement speed 
         float magnitude = Magnitude();
 
         if (magnitude == 0) {
@@ -51,7 +43,6 @@ public:
         }
     }
 };
-//Takes the same use as the previous one just in integers
 class Vector2int {
 public:
     int x;

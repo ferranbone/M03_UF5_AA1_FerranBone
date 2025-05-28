@@ -17,5 +17,5 @@ public:
 
     void LoadScores();
     void SaveScores();
-    void AddScore(int score); // para usar desde GameplayScene
+    void AddScore(int score);
 };
