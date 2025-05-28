@@ -20,13 +20,17 @@ void MenuScene::Start(SDL_Renderer* renderer) {
     SDL_Color normalColor = { 255, 255, 255, 255 }; // blanco
     SDL_Color hoverColor = { 0, 0, 0, 0 };      // rojo
 
-    buttons.push_back(new Button(renderer, font, "Play", { 300, 200, 200, 50 }, normalColor, hoverColor, [this]() {
-        if (changeSceneFunc) {
-            changeSceneFunc("Gameplay");  // Cambia a la escena Gameplay
-        }
+    int centerX = 1920 / 2 - 100;
+    int centerY = 1080 / 2 - 25;
+
+    buttons.push_back(new Button(renderer, font, "Play", { centerX, centerY - 50, 200, 50 }, normalColor, hoverColor, [this]() {
+        std::cout << "Botón Play clickeado!" << std::endl;  // <-- Aquí la comprobación
+
+        this->SetTargetScene("Gameplay");
+        this->MarkAsFinished();
         }));
 
-    buttons.push_back(new Button(renderer, font, "Exit", { 300, 300, 200, 50 }, normalColor, hoverColor, []() {
+    buttons.push_back(new Button(renderer, font, "Exit", { centerX, centerY + 50, 200, 50 }, normalColor, hoverColor, []() {
         std::cout << "Exit clicked\n";
         SDL_Quit();
         exit(0);

@@ -6,7 +6,7 @@ Button::Button(SDL_Renderer* renderer, TTF_Font* font, std::string text, SDL_Rec
     : renderer(renderer), font(font), text(text), rect(rect),
     normalColor(normalColor), hoverColor(hoverColor), onClick(onClick), isHovered(false) {}
 
-void Button::HandleEvent(SDL_Event& e) {
+void Button::HandleEvent(const SDL_Event& e) {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY);
 

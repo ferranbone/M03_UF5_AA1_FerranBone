@@ -9,7 +9,7 @@ public:
     Button(SDL_Renderer* renderer, TTF_Font* font, std::string text, SDL_Rect rect,
         SDL_Color normalColor, SDL_Color hoverColor, std::function<void()> onClick);
 
-    void HandleEvent(SDL_Event& e);
+    void HandleEvent(const SDL_Event& e);
     void Render(SDL_Renderer* renderer);
 
 private:

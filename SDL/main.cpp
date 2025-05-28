@@ -2,7 +2,7 @@
 
 int SDL_main(int argc, char* argv[]) {
 
-	GameEngine myEngine(500,500);
+	GameEngine myEngine(1920,1080);
 	myEngine.Update();
 	myEngine.Finish();
 

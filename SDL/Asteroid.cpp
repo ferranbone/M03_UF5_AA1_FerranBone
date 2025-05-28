@@ -1,7 +1,7 @@
 #include "Asteroid.h"
 #include <cstdlib>
 
-Asteroid::Asteroid(SDL_Renderer* renderer, Vector2 pos, AsteroidSize s) : GameObject(renderer) {
+Asteroid::Asteroid(SDL_Renderer* renderer, Vector2 pos, AsteroidSize s) : GameObject(renderer, new Vector2int(0, 53), new Vector2int(73, 70)) {
     position = pos;
     size = s;
 
@@ -14,8 +14,8 @@ Asteroid::Asteroid(SDL_Renderer* renderer, Vector2 pos, AsteroidSize s) : GameOb
 void Asteroid::Update(float dt) {
     position = Vector2(position.x + velocity.x * dt, position.y + velocity.y * dt);
 
-    if (position.x < 0) position.x = 500;
-    if (position.x > 500) position.x = 0;
-    if (position.y < 0) position.y = 500;
-    if (position.y > 500) position.y = 0;
+    if (position.x < 0) position.x = 1920;
+    if (position.x > 1920) position.x = 0;
+    if (position.y < 0) position.y = 100;
+    if (position.y > 1080) position.y = 0;
 }

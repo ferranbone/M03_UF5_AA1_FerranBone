@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Utils.h"
 
 enum AsteroidSize { LARGE, MEDIUM, SMALL };
 

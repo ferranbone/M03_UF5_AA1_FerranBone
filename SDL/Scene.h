@@ -32,4 +32,12 @@ public:
 	//GETTERS
 	bool IsFinished() { return isFinished; }
 	std::string GetTargetScene() { return targetScene; }
+
+	void SetTargetScene(const std::string& sceneName) {
+		targetScene = sceneName;
+	}
+
+	void MarkAsFinished() {
+		isFinished = true;
+	}
 };

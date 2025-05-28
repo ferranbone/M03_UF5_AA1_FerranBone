@@ -1,10 +1,13 @@
 #include "GameObject.h"
 
-GameObject::GameObject(SDL_Renderer* renderer) {
+GameObject::GameObject(SDL_Renderer* renderer, Vector2int* _textureCoor, Vector2int* _size) {
 
 	position = Vector2(50, 50);
 	zRotation = 0.f;
 	scale = Vector2(1.f, 1.f);
+
+	textureCoor = *_textureCoor;
+	size = *_size;
 
 	//LOAD TEXTURE
 	SDL_Surface* surf = IMG_Load("resources/asteroids_spritesheet.png");
@@ -25,8 +28,12 @@ void GameObject::Update(float dt) {
 }
 
 void GameObject::Render(SDL_Renderer* renderer) {
-	SDL_Rect source{ 0, 0, 30, 40 };
-
+	SDL_Rect source{
+			textureCoor.x,
+			textureCoor.y,
+			size.x,
+			size.y
+	};
 	SDL_Rect destination{
 		static_cast<int>(position.x),
 		static_cast<int>(position.y),

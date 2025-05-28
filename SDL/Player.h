@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Utils.h"
 #include <vector>
 
 class Bullet;

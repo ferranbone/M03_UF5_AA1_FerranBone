@@ -3,9 +3,9 @@
 #include <cmath>
 
 Player::Player(SDL_Renderer* renderer)
-    : GameObject(renderer), velocity(0, 0), speed(100.0f), rotationSpeed(180.0f)
+    : GameObject(renderer, new Vector2int(0, 0), new Vector2int(30, 40)), velocity(0, 0), speed(100.0f), rotationSpeed(180.0f)
 {
-    position = Vector2(400, 300);  // posición inicial, cambia si quieres
+    position = Vector2(1920/2, 1080/2);  // posición inicial, cambia si quieres
     scale = Vector2(1, 1);
     zRotation = 0.0f;
 }
@@ -32,9 +32,9 @@ void Player::Update(float dt) {
     velocity.y *= 0.98f;
 
     // Reaparición en pantalla (ajusta según tamaño ventana)
-    if (position.x < 0) position.x += 500;
-    else if (position.x > 500) position.x -= 350;
+    if (position.x < 0) position.x += 1920;
+    else if (position.x > 1920) position.x -= 1920;
 
-    if (position.y < 0) position.y += 300;
-    else if (position.y > 300) position.y -= 300;
+    if (position.y < 0) position.y += 1080;
+    else if (position.y > 1080) position.y -= 1080;
 }
