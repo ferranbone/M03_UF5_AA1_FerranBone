@@ -14,12 +14,9 @@ public:
     int lives = 3;
     bool isDead = false;
     float deathTimer = 0.f;
+    const float DEATH_ANIMATION_TIME = 3.0f;
 
-    void Die() {
-        lives--;
-        isDead = true;
-        deathTimer = 3.0f;
-    }
+    void Reset();
 
     Player(SDL_Renderer* renderer);
 

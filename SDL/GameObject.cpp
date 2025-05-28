@@ -28,18 +28,26 @@ void GameObject::Update(float dt) {
 }
 
 void GameObject::Render(SDL_Renderer* renderer) {
-	SDL_Rect source{
-			textureCoor.x,
-			textureCoor.y,
-			size.x,
-			size.y
-	};
-	SDL_Rect destination{
-		static_cast<int>(position.x),
-		static_cast<int>(position.y),
-		static_cast<int>(source.w * scale.x),
-		static_cast<int>(source.h * scale.y)
-	};
+    if (!texture) return;
 
-	SDL_RenderCopyEx(renderer, texture, &source, &destination, zRotation, nullptr, SDL_FLIP_NONE);
+    // Rectángulo fuente del sprite sheet
+    SDL_Rect srcRect = {
+        textureCoor.x,
+        textureCoor.y,
+        size.x,
+        size.y
+    };
+
+    // Rectángulo destino en pantalla (aplicando escala)
+    int scaledWidth = static_cast<int>(size.x * scale.x);
+    int scaledHeight = static_cast<int>(size.y * scale.y);
+
+    SDL_Rect destRect = {
+        static_cast<int>(position.x - scaledWidth / 2),
+        static_cast<int>(position.y - scaledHeight / 2),
+        scaledWidth,
+        scaledHeight
+    };
+
+    SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, zRotation, nullptr, SDL_FLIP_NONE);
 }

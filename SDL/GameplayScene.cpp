@@ -27,17 +27,28 @@ void GameplayScene::Update(float dt) {
             float dx = bullets[i]->position.x - asteroids[j]->position.x;
             float dy = bullets[i]->position.y - asteroids[j]->position.y;
             if (sqrt(dx * dx + dy * dy) < 20.0f) {
-                if (asteroids[j]->size == LARGE) {
-                    asteroids.push_back(new Asteroid(renderer, asteroids[j]->position, MEDIUM));
-                    asteroids.push_back(new Asteroid(renderer, asteroids[j]->position, MEDIUM));
-                } else if (asteroids[j]->size == MEDIUM) {
-                    asteroids.push_back(new Asteroid(renderer, asteroids[j]->position, SMALL));
-                    asteroids.push_back(new Asteroid(renderer, asteroids[j]->position, SMALL));
-                }
+                Vector2 parentPos = asteroids[j]->position;
+                Vector2 parentVel = asteroids[j]->velocity;
+                AsteroidSize parentSize = asteroids[j]->asteroidSize;
+
+                // Eliminar asteroide actual
                 delete asteroids[j];
                 asteroids.erase(asteroids.begin() + j);
+
+                // Eliminar bala
                 delete bullets[i];
                 bullets.erase(bullets.begin() + i);
+
+                // Spawn nuevos asteroides según tamaño
+                if (parentSize == LARGE) {
+                    asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, MEDIUM));
+                    asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, MEDIUM));
+                }
+                else if (parentSize == MEDIUM) {
+                    asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, SMALL));
+                    asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, SMALL));
+                }
+
                 break;
             }
         }
@@ -47,9 +58,10 @@ void GameplayScene::Update(float dt) {
     for (auto a : asteroids) {
         float dx = a->position.x - player->position.x;
         float dy = a->position.y - player->position.y;
-        if (sqrt(dx * dx + dy * dy) < 20.0f) {
-            targetScene = "MainMenu";
-            isFinished = true;
+        if (sqrt(dx * dx + dy * dy) < 20.0f && !player->isDead) {
+            player->lives--;
+            player->isDead = true;
+            player->deathTimer = player->DEATH_ANIMATION_TIME;
             break;
         }
     }
@@ -70,12 +82,21 @@ void GameplayScene::Render(SDL_Renderer* rend) {
     for (auto b : bullets) b->Render(rend);
     for (auto a : asteroids) a->Render(rend);
     player->Render(rend);
+    RenderHUD(rend);
+}
+
+void GameplayScene::RenderHUD(SDL_Renderer* rend) {
+    SDL_Color white = { 255, 255, 255, 255 };
+    for (int i = 0; i < player->lives; i++) {
+        SDL_Rect lifeRect = { 10 + i * 30, 10, 20, 20 };  // Iconos de vida
+        SDL_SetRenderDrawColor(rend, white.r, white.g, white.b, white.a);
+        SDL_RenderFillRect(rend, &lifeRect);
+    }
 }
 
 void GameplayScene::SpawnAsteroids(int count) {
     for (int i = 0; i < count; ++i) {
-        Vector2 pos(rand() % 500, rand() % 500);
-        asteroids.push_back(new Asteroid(renderer, pos, LARGE));
+        asteroids.push_back(new Asteroid(renderer, LARGE));
     }
 }
 

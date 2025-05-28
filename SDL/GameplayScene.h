@@ -17,4 +17,5 @@ public:
     void Render(SDL_Renderer* rend) override;
     void Exit() override;
     void SpawnAsteroids(int count);
+    void RenderHUD(SDL_Renderer* rend);
 };

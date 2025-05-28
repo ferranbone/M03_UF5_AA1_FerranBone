@@ -7,11 +7,12 @@ enum AsteroidSize { LARGE, MEDIUM, SMALL };
 class Asteroid : public GameObject {
 public:
     Vector2 velocity;
-    AsteroidSize size;
+    AsteroidSize asteroidSize;
 
-    Asteroid(SDL_Renderer* renderer, Vector2 pos, AsteroidSize size);
+    Asteroid(SDL_Renderer* renderer, AsteroidSize size);
+    Asteroid(SDL_Renderer* renderer, Vector2 pos, Vector2 parentVel, AsteroidSize size);
 
     void Update(float dt) override;
-
-    void OnDestroyed(std::vector<Asteroid*>& asteroidList);
+    void Render(SDL_Renderer* rend) override;
+    static Vector2 GetRandomOffscreenPosition();
 };

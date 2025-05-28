@@ -10,7 +10,7 @@ public:
 	GameObject(SDL_Renderer* renderer, Vector2int* _textureCoor, Vector2int* _size);
 
 	virtual void Update(float dt);
-	void Render(SDL_Renderer* renderer);
+	virtual void Render(SDL_Renderer* renderer);
 
 
 
@@ -19,6 +19,7 @@ public:
 	float zRotation;
 
 	SDL_Texture* texture;
+	int spriteWidth, spriteHeight;
 
 protected:
 	Vector2int size;

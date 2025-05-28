@@ -25,6 +25,18 @@ void Player::HandleInput(const Uint8* keystates, std::vector<Bullet*>& bullets, 
 }
 
 void Player::Update(float dt) {
+    if (isDead) {
+        deathTimer -= dt;
+        if (deathTimer <= 0) {
+            if (lives > 0) {
+                Reset();
+            }
+            else {
+                // Game Over (volver al menú)
+            }
+        }
+        return;
+    }
     position.x += velocity.x * dt;
     position.y += velocity.y * dt;
 
@@ -37,4 +49,9 @@ void Player::Update(float dt) {
 
     if (position.y < 0) position.y += 600;
     else if (position.y > 600) position.y -= 600;
+}
+
+void Player::Reset() {
+    isDead = false;
+    position = Vector2(300, 300);
 }
