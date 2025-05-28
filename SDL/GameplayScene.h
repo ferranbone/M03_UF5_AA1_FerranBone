@@ -10,6 +10,11 @@ private:
     std::vector<Asteroid*> asteroids;
     int wave = 1;
     SDL_Renderer* renderer = nullptr;
+    int score = 0;
+    std::string targetScene;
+    std::vector<Enemy*> enemies;
+    float enemySpawnTimer = 0.0f;
+    const float ENEMY_SPAWN_TIME = 15.0f;
 
 public:
     void Start(SDL_Renderer* rend) override;
@@ -18,4 +23,5 @@ public:
     void Exit() override;
     void SpawnAsteroids(int count);
     void RenderHUD(SDL_Renderer* rend);
+    void SpawnEnemy();
 };

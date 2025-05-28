@@ -16,6 +16,10 @@ public:
     float deathTimer = 0.f;
     const float DEATH_ANIMATION_TIME = 3.0f;
 
+    float shootCooldown = 0.0f;
+    const float SHOOT_COOLDOWN_TIME = 0.5f;
+    bool canShoot = true;
+
     void Reset();
 
     Player(SDL_Renderer* renderer);

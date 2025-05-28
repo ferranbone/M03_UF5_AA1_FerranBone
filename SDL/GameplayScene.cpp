@@ -13,13 +13,21 @@ void GameplayScene::Update(float dt) {
     const Uint8* keystates = SDL_GetKeyboardState(NULL);
     player->HandleInput(keystates, bullets, renderer);
 
-    if (keystates[SDL_SCANCODE_SPACE]) {
+    if (keystates[SDL_SCANCODE_SPACE] && player->canShoot) {
         bullets.push_back(new Bullet(renderer, player->position, player->zRotation));
+        player->canShoot = false;
+        player->shootCooldown = player->SHOOT_COOLDOWN_TIME;
     }
 
     for (auto b : bullets) b->Update(dt);
     for (auto a : asteroids) a->Update(dt);
     player->Update(dt);
+
+    if (player->isDead && player->lives <= 0 && player->deathTimer <= 0) {
+        targetScene = "MenuScene";  // Nombre de tu escena de menú
+        isFinished = true;
+        return;  // Salir temprano para evitar actualizaciones adicionales
+    }
 
     // Colisiones
     for (int i = 0; i < bullets.size(); ++i) {
@@ -41,12 +49,17 @@ void GameplayScene::Update(float dt) {
 
                 // Spawn nuevos asteroides según tamaño
                 if (parentSize == LARGE) {
+                    score += 50;
                     asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, MEDIUM));
                     asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, MEDIUM));
                 }
                 else if (parentSize == MEDIUM) {
+                    score += 30;
                     asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, SMALL));
                     asteroids.push_back(new Asteroid(renderer, parentPos, parentVel, SMALL));
+                }
+                else {
+                    score += 20;
                 }
 
                 break;
@@ -88,9 +101,23 @@ void GameplayScene::Render(SDL_Renderer* rend) {
 void GameplayScene::RenderHUD(SDL_Renderer* rend) {
     SDL_Color white = { 255, 255, 255, 255 };
     for (int i = 0; i < player->lives; i++) {
-        SDL_Rect lifeRect = { 10 + i * 30, 10, 20, 20 };  // Iconos de vida
+        SDL_Rect lifeRect = { 10 + i * 30, 10, 20, 20 };
         SDL_SetRenderDrawColor(rend, white.r, white.g, white.b, white.a);
         SDL_RenderFillRect(rend, &lifeRect);
+    }
+
+    TTF_Font* font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
+    if (font) {
+        std::string scoreText = "Score: " + std::to_string(score);
+        SDL_Surface* surface = TTF_RenderText_Solid(font, scoreText.c_str(), white);
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(rend, surface);
+
+        SDL_Rect dstRect = { 10, 40, surface->w, surface->h };
+        SDL_RenderCopy(rend, texture, nullptr, &dstRect);
+
+        SDL_FreeSurface(surface);
+        SDL_DestroyTexture(texture);
+        TTF_CloseFont(font);
     }
 }
 

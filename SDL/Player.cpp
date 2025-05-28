@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "Bullet.h"
+#include "Scene.h"
+#include "MenuScene.h"
 #include <cmath>
 
 Player::Player(SDL_Renderer* renderer)
@@ -25,14 +27,20 @@ void Player::HandleInput(const Uint8* keystates, std::vector<Bullet*>& bullets, 
 }
 
 void Player::Update(float dt) {
+
+    if (!canShoot) {
+        shootCooldown -= dt;
+        if (shootCooldown <= 0.0f) {
+            canShoot = true;
+            shootCooldown = 0.0f;
+        }
+    }
+
     if (isDead) {
         deathTimer -= dt;
         if (deathTimer <= 0) {
             if (lives > 0) {
                 Reset();
-            }
-            else {
-                // Game Over (volver al menú)
             }
         }
         return;
